@@ -5,11 +5,59 @@
         <title>Paleontología</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <style>
+            #slider {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 100%;
+                height: 2px;
+                background: #444;
+                outline: none;
+            }
+
+            #slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #e94560;
+                cursor: pointer;
+            }
+
+            #slider::-moz-range-thumb {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #e94560;
+                border: none;
+                cursor: pointer;
+            }
+
+            #slider::-moz-range-track {
+                height: 2px;
+                background: #444;
+            }
             html, body {margin:0; padding:0; height: 100%;}
             #map {width:100%; height: 100%;}
+
+            #panel {
+                padding-bottom: 24px !important;
+            }
         </style>
     </head>
     <body>
+        <div id="panel" style="position:fixed; z-index:1000; left:0; right:0; bottom:0; background:#1a1a2e; padding:14px 24px 10px; box-shadow:0 -2px 12px rgba(0,0,0,0.4);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; font-family:Arial, sans-serif;">
+                <span id="etapaNombre" style="color:#fff; font-size:1.1rem; font-weight:600; letter-spacing:0.5px;">—</span>
+                <span style="color:#888; font-size:0.75rem;">Mostrando <span id="contador">0</span> registros</span>
+            </div>
+            <input type="range" id="slider" min="0" max="28" value="0">
+
+            <div style="display:flex; gap:16px; margin-top:8px; font-family:Arial, sans-serif; font-size:0.8rem; color:#ccc;">
+                <label style="cursor:pointer;"><input type="checkbox" id="chkFauna" checked> Fauna</label>
+                <label style="cursor:pointer;"><input type="checkbox" id="chkFlora" checked> Flora</label>
+                <label style="cursor:pointer;"><input type="checkbox" id="chkDino" checked> Dinosaurios</label>
+            </div>
+        </div>
 
         <div id="map"></div>
 
@@ -17,34 +65,91 @@
         <script src="datos_paleo.js"></script>
         <script>
             //empieza el mapa
-            const map= L.map('map').setView([-38,-66],4);
+            const map= L.map('map', {preferCanvas: true,
+                minZoom: 4,
+                maxBounds: [
+                    [-58, -76],
+                    [-20, -52]
+                ],
+                maxBoundsViscosity: 0.8
+            }).setView([-38,-66],4);
 
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
 
-            console.log('cargando ${FOSILES.lenght} registros...');
+            const ETAPAS= [
+                'Anisian','Ladinian','Carnian','Norian','Rhaetian',
+                'Hettangian','Sinemurian','Pliensbachian','Toarcian','Aalenian',
+                'Bajocian','Bathonian','Callovian','Oxfordian','Kimmeridgian','Tithonian',
+                'Berriasian','Valanginian','Hauterivian','Barremian','Aptian','Albian',
+                'Cenomanian','Turonian','Coniacian','Santonian','Campanian','Maastrichtian'
+            ];
+//agrupo los fosiles por etapas
+            const fosilesPorEtapa= {};
+            ETAPAS.forEach(etapa =>fosilesPorEtapa[etapa] =[]);
             FOSILES.forEach(fosil => {
-                const color = fosil.esDino ? "#d9534f" : (fosil.tipo === "Flora" ? "#5cb85c" : "#4f9dd9");
-
-                L.circleMarker([fosil.lat, fosil.lng], {
-                    radius: fosil.esDino ? 7:4,
-                    color: color,
-                    fillColor: color,
-                    fillOpacity: 0.7,
-                    weight: fosil.esDino ? 1.5:0.5
-                })
-                .bindPopup(`
-                <b>${fosil.nombre||"Sin identificar"}</b><br>
-                ${fosil.esDino ? "Dinosaurio<br>":""}
-                Tipo: ${fosil.tipo}<br>
-                Familia: ${fosil.familia || "-"}<br>
-                Formación: ${fosil.formacion || "-"}<br>
-                Provincia: ${fosil.provincia || "-"}<br>
-                Edad: ${fosil.edadMa ?? "-"} Ma
-                `)
-                .addTo(map);
+                if (fosilesPorEtapa[fosil.etapa]){
+                    fosilesPorEtapa[fosil.etapa].push(fosil);
+                }
             });
+
+    //grupo q se llena y vacia en el slider
+            let capaActual= L.layerGroup().addTo(map);
+            const slider= document.getElementById('slider');
+            const etapaNombre= document.getElementById('etapaNombre');
+            const contador= document.getElementById('contador')
+            const chkFauna= document.getElementById('chkFauna');
+            const chkFlora= document.getElementById('chkFlora');
+            const chkDino= document.getElementById('chkDino');
+
+            function dibujarEtapa(indice) {
+                const etapa= ETAPAS[indice];
+                const fosilesDeEstaEtapa= fosilesPorEtapa[etapa];
+
+                //borra los puntos anteriores
+                capaActual.clearLayers()
+                let mostrados= 0;
+
+                //nuevos puntos
+                fosilesDeEstaEtapa.forEach(fosil =>{
+                    if (fosil.esDino && !chkDino.checked) return;
+                    if (!fosil.esDino && fosil.tipo === "Fauna" && !chkFauna.checked) return;
+                    if (fosil.tipo === "Flora" && !chkFlora.checked) return;
+
+                    const color= fosil.esDino ? "#d9534f" : (fosil.tipo === "Flora" ? "#5cb85c" : "#4f9dd9");
+
+                    L.circleMarker([fosil.lat, fosil.lng], {
+                        radius: fosil.esDino ? 7 : 4,
+                        color: color,
+                        fillColor: color,
+                        fillOpacity: 0.7,
+                        weight: fosil.esDino ? 1.5:0.5
+                    })
+                    .bindPopup(`
+                        <b>${fosil.nombre || "Sin identificar"}</b><br>
+                        ${fosil.esDino ? "Dinosaurio<br>" : ""}
+                        Tipo: ${fosil.tipo}<br>
+                        Familia: ${fosil.familia || "-"}<br>
+                        Formación: ${fosil.formacion || "-"}<br>
+                        Provincia: ${fosil.provincia || "-"}<br>
+                        Edad: ${fosil.edadMa ?? "-"} Ma
+                    `)
+                    .addTo(capaActual);
+
+                    mostrados++;
+                });
+                //texto del panel
+                etapaNombre.textContent= etapa;
+                contador.textContent= mostrados;
+            }
+
+            slider.addEventListener('input', () => dibujarEtapa(parseInt(slider.value)));
+            chkFauna.addEventListener('change', () => dibujarEtapa(parseInt(slider.value)));
+            chkFlora.addEventListener('change', () => dibujarEtapa(parseInt(slider.value)));
+            chkDino.addEventListener('change', () => dibujarEtapa(parseInt(slider.value)));
+
+            dibujarEtapa(0);
             
         </script>
 
