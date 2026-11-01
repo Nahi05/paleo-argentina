@@ -1,0 +1,211 @@
+#slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    outline: none;
+    background: linear-gradient(90deg,
+        #b06ab3 0%, #7e57c2 20%,
+        #5b8def 22%, #3fa7d6 58%,
+        #4caf50 60%, #8bc34a 100%);
+}
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0e1230;
+    cursor: pointer;
+}
+#slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0e1230;
+    cursor: pointer;
+}
+#slider::-moz-range-track {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg,
+        #b06ab3 0%, #7e57c2 20%,
+        #5b8def 22%, #3fa7d6 58%,
+        #4caf50 60%, #8bc34a 100%);
+}
+
+.eras {
+    position: relative;
+    height: 34px;
+    margin-top: 8px;
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    color: #c9c6f0;
+}
+.eras span {
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+    line-height: 1.3;
+}
+.eras small { color: #8f94d1; font-size: 0.7rem; }
+
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#map {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        background: linear-gradient(90deg, #0a0a1a 0%, #151a5c 55%, #2a2fb8 100%);
+}
+
+.map_sat{
+    filter: brightness(0.55) saturate(0.9);
+}
+
+#panel {
+    position: fixed; z-index: 1000;
+    left: 16px; right: 16px; bottom: 16px;
+    background: rgba(14, 18, 48, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 14px 22px 10px;
+    font-family: Georgia, serif; color: #e9e8fb;
+}
+.panel-cab { display: flex; align-items: baseline; gap: 14px; margin-bottom: 12px; }
+.panel-titulo { font-size: 0.95rem; }
+.panel-etapa { font-size: 1.1rem; color: #f0b35a; }
+.panel-cont { margin-left: auto; font-size: 0.78rem; color: #8f94d1; }
+
+#panelcapa{
+    position: fixed; z-index: 1000; left: 64px; top: 70px; width: 220px;
+    background: rgba(14, 18, 48, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px; padding: 14px 16px;
+    font-family: Georgia, serif; color: #e9e8fb;
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+}
+#panelcapa { scrollbar-width: thin; scrollbar-color: #3a3f7a transparent; }
+#panelcapa::-webkit-scrollbar { width: 6px; }
+#panelcapa::-webkit-scrollbar-thumb { background: #3a3f7a; border-radius: 3px; }
+
+.capas-tit{ font-size: 1rem; margin-bottom: 10px; }
+.fila-capa{ display: flex; justify-content: space-between; align-items: center;
+padding: 6px 0; cursor:pointer; font-size: 0.9rem; }
+.punto{
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; margin-right: 8px;
+}
+.fila-capa input{display: none;}
+.switch{
+    width: 34px; height: 18px; border-radius: 9px;
+    background: #444; position:relative; transition: 0.2s;
+}
+.switch::after{
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #fff; transition: 0.2s;
+}
+.fila-capa input:checked + .switch{background: #3f9d6b;}
+.fila-capa input:checked + .switch::after {left:18px}
+.eti-filtro{display: block; font-size: 0.8rem; color: #8f94d1; margin-bottom: 4px;}
+#selProv{
+    width: 100%; padding: 6px 8px; border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06); color: #e9e8fb;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: Georgia, serif; font-size: 0.85rem;
+}
+#selProv option { background: #0e1230; color: #e9e8fb; }
+
+#panelDet {
+    display: none;
+    position: fixed; z-index: 1000; right: 16px; top: 16px; width: 290px;
+    max-height: calc(100vh - 190px); overflow-y: auto;
+    background: rgba(14, 18, 48, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px; padding: 16px 18px;
+    font-family: Georgia, serif; color: #e9e8fb;
+}
+#panelDet.abierto { display: block; }
+#cerrarDet {
+    position: absolute; top: 10px; right: 12px;
+    background: none; border: none; color: #8f94d1;
+    font-size: 1rem; cursor: pointer;
+}
+#detNom { font-size: 1.25rem; font-style: italic; margin-right: 24px; }
+#detTipo { font-size: 0.85rem; color: #8f94d1; margin: 2px 0 12px; }
+.det-fila {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 9px 0; border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.88rem;
+}
+.det-etiqueta { font-size: 0.75rem; color: #8f94d1; }
+
+.etiqueta-mapa {
+    color: #e9e8fb;
+    font-family: Georgia, serif;
+    font-size: 0.85rem;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 0 4px #000, 0 0 8px #000;
+}
+.etiqueta-oceano {
+    font-style: italic;
+    letter-spacing: 3px;
+    color: #9fb4e8;
+}
+
+#head {
+    position: fixed; z-index: 900; top: 0; left: 0; right: 0;
+    padding: 14px 24px 28px 64px;
+    background: linear-gradient(to bottom, rgba(5, 8, 25, 0.85), transparent);
+    font-family: Georgia, serif; color: #e9e8fb;
+    pointer-events: none;
+}
+.cab-titulo { font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; }
+.cab-sub { font-size: 0.85rem; color: #8f94d1; margin-top: 2px; }
+
+.leaflet-bottom { bottom: 135px; }
+
+.leaflet-control-scale-line {
+    background: rgba(14, 18, 48, 0.7);
+    color: #e9e8fb;
+    border-color: #e9e8fb;
+}
+
+.frase-cierre {
+    position: fixed; z-index: 900;
+    right: 28px; bottom: 175px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem; line-height: 1.1;
+    color: #e9e8fb; text-align: right;
+    transform: rotate(-4deg);
+    text-shadow: 0 0 6px #000, 0 0 10px #000;
+    pointer-events: none;
+}
+
+.ref { font-size: 0.82rem; padding: 3px 0; color: #c9c6f0; }
+
+#buscador {
+    width: 100%; padding: 6px 8px; border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06); color: #e9e8fb;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: Georgia, serif; font-size: 0.85rem;
+    box-sizing: border-box;
+}
+#buscador::placeholder { color: #8f94d1; }
+#resultadosBusqueda { font-size: 0.75rem; color: #8f94d1; margin-top: 6px; line-height: 1.5; }
+#resultadosBusqueda a { color: #f0b35a; text-decoration: none; }
+#resultadosBusqueda a:hover { text-decoration: underline; }
+
+
+body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
