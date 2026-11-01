@@ -2,12 +2,14 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Paleontología</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="estilo.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
     </head>
     <body>
+        <button id="btnCapas">☰ Capas</button>
         <header id="head">
             <div class="cab-titulo">Huellas del Mesozoico</div>
             <div class="cab-sub">Atlas paleontológico interactivo</div>
@@ -43,6 +45,11 @@
             <label class="etiqueta-filtro" for="buscador" style="margin-top:10px;">Especie</label>
             <input type="search" id="buscador" placeholder="Buscar especie...">
             <div id="resultadosBusqueda"></div>
+            <div class="creditos">
+                Datos: <a href="https://paleobiodb.org" target="_blank" rel="noopener">Paleobiology Database</a><br>
+                Mapa: <a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a><br>
+                Imágenes: Esri, Maxar, Earthstar Geographics
+            </div>
         </div>
         <div id="panelDet">
             <button id="cerrarDet" aria-label="Cerrar">X</button>
@@ -84,6 +91,5 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="datos_paleo (4).js"></script>
         <script src="app.js"></script>
-
     </body>
 </html>

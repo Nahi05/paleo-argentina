@@ -1,6 +1,6 @@
 //empieza el mapa
 const map= L.map('map', {preferCanvas: true,
-    minZoom: 4,
+    minZoom: window.innerWidth < 768 ? 3 : 4,
     maxBounds: [
         [-58, -76],
         [-20, -52]
@@ -16,8 +16,8 @@ map.fitBounds([[-55, -73], [-21, -53]], {
 });
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Imágenes: Esri, Maxar, Earthstar Geographics y la comunidad de usuarios GIS',
-    maxZoom: 12,
+        attribution: 'Esri, Maxar, Earthstar Geographics',
+        maxZoom: 12,
     className: 'mapa-satelital'
 }).addTo(map);
 
@@ -87,6 +87,7 @@ function mostrarDetalle(fosil) {
         `${fosil.provincia || '-'}${fosil.formacion ? ' · Fm. ' + fosil.formacion : ''}`;
     document.getElementById('detFam').textContent = fosil.familia || '-';
     panelDet.classList.add('abierto');
+    panelCapa.classList.remove('abierto');
 }
 
 document.getElementById('cerrarDet').addEventListener('click', () => {
@@ -211,4 +212,11 @@ etiqueta(-22, -52, 'Brasil');
 etiqueta(-33, -55.8, 'Uruguay');
 etiqueta(-44, -77, 'Océano Pacífico', 'etiqueta-oceano');
 etiqueta(-44, -53, 'Océano Atlántico', 'etiqueta-oceano');
+const btnCapas = document.getElementById('btnCapas');
+const panelCapa = document.getElementById('panelcapa');
+
+btnCapas.addEventListener('click', () => {
+    panelCapa.classList.toggle('abierto');
+    panelDet.classList.remove('abierto'); // evita que se pisen los paneles
+});
 dibuEtapa(0);
