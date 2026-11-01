@@ -211,25 +211,32 @@ padding: 6px 0; cursor:pointer; font-size: 0.9rem; }
 body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
 
 /* responsive */
+
+/* El botón de capas solo existe en pantallas chicas */
 @media (min-width: 769px) {
     #btnCapas { display: none; }
 }
-/*tablet / notebook chica */
+
+/* ---------- Tablet / notebook chica ---------- */
 @media (max-width: 1024px) {
     #panelcapa { width: 200px; }
     #panelDet  { width: 260px; }
     .cab-titulo { font-size: 1.15rem; }
 }
 
-/*celular y tablet vertical*/
+/* ---------- Celular y tablet vertical ---------- */
 @media (max-width: 768px) {
 
+    /* Cabecera más compacta, deja lugar al botón de capas */
     #head { padding: 10px 100px 20px 56px; }
     .cab-titulo { font-size: 0.95rem; letter-spacing: 1px; }
     .cab-sub { font-size: 0.72rem; }
 
+    /* La frase manuscrita tapa el mapa: se oculta */
     .frase-cierre { display: none; }
+    .etiqueta-oceano { display: none; }
 
+    /* Botón flotante para abrir/cerrar capas y filtros */
     #btnCapas {
         display: block;
         position: fixed; z-index: 1100;
@@ -243,6 +250,7 @@ body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
         cursor: pointer;
     }
 
+    /* Panel de capas: oculto por defecto, ocupa el ancho al abrirse */
     #panelcapa {
         display: none;
         left: 12px; right: 12px; top: 56px;
@@ -251,6 +259,7 @@ body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
     }
     #panelcapa.abierto { display: block; }
 
+    /* Detalle del fósil: pasa a ser una "hoja" sobre la línea de tiempo */
     #panelDet {
         left: 12px; right: 12px;
         top: auto; bottom: 118px;
@@ -258,6 +267,7 @@ body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
         max-height: 38vh;
     }
 
+    /* Línea de tiempo más baja */
     #panel {
         left: 8px; right: 8px; bottom: 8px;
         padding: 10px 14px 6px;
@@ -271,16 +281,19 @@ body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
     .eras { font-size: 0.68rem; height: 30px; }
     .eras small { font-size: 0.6rem; }
 
+    /* Slider más cómodo para el dedo */
     #slider { height: 10px; }
     #slider::-webkit-slider-thumb { width: 26px; height: 26px; }
     #slider::-moz-range-thumb { width: 22px; height: 22px; }
 
+    /* La escala sube para no quedar tapada */
     .leaflet-bottom { bottom: 112px; }
 
+    /* Inputs más grandes (evita el zoom automático de iOS) */
     #selProv, #buscador { font-size: 16px; padding: 8px; }
 }
 
-/*celulares muy chicos*/
+/* ---------- Celulares muy chicos ---------- */
 @media (max-width: 400px) {
     .cab-sub { display: none; }
     .eras small { display: none; }
@@ -289,7 +302,7 @@ body, #panel, #panelCapas, #panelDetalle { font-variant-numeric: lining-nums; }
     .leaflet-bottom { bottom: 98px; }
 }
 
-/*celular en horizontal*/
+/* ---------- Celular en horizontal (poca altura) ---------- */
 @media (max-height: 500px) {
     #panelcapa { max-height: calc(100vh - 150px); }
     #panelDet  { max-height: calc(100vh - 150px); top: 56px; bottom: auto; }
